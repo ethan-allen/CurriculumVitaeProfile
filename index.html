@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phase 1 | Animated Foundation</title>
+    <title>Phase 1 | Enterprise Network Animation</title>
     <style>
         /* CSS Reset & Foundation */
         * {
@@ -16,7 +16,8 @@
             width: 100%;
             height: 100%;
             overflow: hidden; /* Prevents scrollbars during the animation phase */
-            background-color: #020813; /* Deep tech dark background */
+            /* Deep, premium navy-to-black gradient typical of enterprise tech sites */
+            background: radial-gradient(circle at center, #0a1931 0%, #02060d 100%);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -50,29 +51,31 @@
             font-weight: 700;
             letter-spacing: 2px;
             margin-bottom: 20px;
-            text-transform: uppercase;
-            text-shadow: 0 4px 20px rgba(0, 229, 255, 0.4);
+            text-shadow: 0 4px 20px rgba(0, 180, 216, 0.5);
         }
 
         p {
             font-size: 1.2rem;
-            color: #8bd2de;
+            color: #90e0ef;
             max-width: 600px;
             line-height: 1.6;
+            font-weight: 300;
         }
     </style>
 </head>
 <body>
 
+    <!-- Phase 1: The Interactive Animated Background -->
     <canvas id="hero-canvas"></canvas>
 
+    <!-- Placeholder for Phase 2 Content -->
     <div class="content-overlay">
-        <h1>Foundation Ready</h1>
-        <p>The animated background is active. Standing by for content integration and layout structuring.</p>
+        <h1>Foundation Active</h1>
+        <p>Premium enterprise network animation initialized. Standing by for Phase 2 content integration.</p>
     </div>
 
     <script>
-        // --- High-Tech Particle Network Animation ---
+        // --- Premium Plexus Network Animation ---
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -83,7 +86,7 @@
         let mouse = {
             x: null,
             y: null,
-            radius: 150 // Distance the mouse interacts with particles
+            radius: 180 // Gentle magnetic interaction radius
         }
 
         window.addEventListener('mousemove', function(event) {
@@ -100,19 +103,22 @@
         function resizeCanvas() {
             w = canvas.width = window.innerWidth;
             h = canvas.height = window.innerHeight;
+            init(); // Re-initialize particles to fit the new screen size
         }
         window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
 
         // Particle Blueprint
         class Particle {
             constructor(x, y, directionX, directionY, size, color) {
                 this.x = x;
                 this.y = y;
+                this.baseX = x; // Original starting point for smooth return
+                this.baseY = y;
                 this.directionX = directionX;
                 this.directionY = directionY;
                 this.size = size;
                 this.color = color;
+                this.density = (Math.random() * 30) + 1; // Used for smooth mouse pull
             }
 
             // Draw individual particle
@@ -123,39 +129,47 @@
                 ctx.fill();
             }
 
-            // Calculate movement and mouse interaction
+            // Calculate movement and fluid mouse interaction
             update() {
-                // Bounce off edges
-                if (this.x > w || this.x < 0) {
+                // Continuous slow drift
+                this.baseX += this.directionX;
+                this.baseY += this.directionY;
+
+                // Bounce off edges smoothly
+                if (this.baseX > w || this.baseX < 0) {
                     this.directionX = -this.directionX;
                 }
-                if (this.y > h || this.y < 0) {
+                if (this.baseY > h || this.baseY < 0) {
                     this.directionY = -this.directionY;
                 }
 
-                // Mouse repel effect
+                // Smooth magnetic mouse interaction
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
                 
-                if (distance < mouse.radius + this.size) {
-                    if (mouse.x < this.x && this.x < w - this.size * 10) {
-                        this.x += 1.5;
+                if (mouse.x !== undefined && distance < mouse.radius) {
+                    // Gentle push/pull math
+                    let forceDirectionX = dx / distance;
+                    let forceDirectionY = dy / distance;
+                    let force = (mouse.radius - distance) / mouse.radius;
+                    let directionX = forceDirectionX * force * this.density * 0.05;
+                    let directionY = forceDirectionY * force * this.density * 0.05;
+                    
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    // Smoothly return to their natural drifting path
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 20;
                     }
-                    if (mouse.x > this.x && this.x > this.size * 10) {
-                        this.x -= 1.5;
-                    }
-                    if (mouse.y < this.y && this.y < h - this.size * 10) {
-                        this.y += 1.5;
-                    }
-                    if (mouse.y > this.y && this.y > this.size * 10) {
-                        this.y -= 1.5;
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 20;
                     }
                 }
-
-                // Move particle
-                this.x += this.directionX;
-                this.y += this.directionY;
+                
                 this.draw();
             }
         }
@@ -163,23 +177,23 @@
         // Initialize Particle Array
         function init() {
             particlesArray = [];
-            // Adjust the divisor (10000) to increase/decrease particle density
-            let numberOfParticles = (h * w) / 10000;
+            // Adjusted density for a cleaner, high-end look
+            let numberOfParticles = (h * w) / 12000; 
             
             for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1; // Particle size between 1 and 3
+                let size = (Math.random() * 1.5) + 0.5; // Very delicate particles
                 let x = (Math.random() * ((w - size * 2) - (size * 2)) + size * 2);
                 let y = (Math.random() * ((h - size * 2) - (size * 2)) + size * 2);
-                // Speed and direction
-                let directionX = (Math.random() * 1.5) - 0.75;
-                let directionY = (Math.random() * 1.5) - 0.75;
-                let color = '#00e5ff'; // Cyan color to match the tech theme
+                // Very slow, deliberate drifting speed
+                let directionX = (Math.random() * 0.4) - 0.2; 
+                let directionY = (Math.random() * 0.4) - 0.2; 
+                let color = '#00b4d8'; // Electric blue
 
                 particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
             }
         }
 
-        // Draw lines connecting particles that are close to each other
+        // Draw delicate lines connecting particles
         function connect() {
             let opacityValue = 1;
             for (let a = 0; a < particlesArray.length; a++) {
@@ -187,11 +201,12 @@
                     let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
                                  + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
                     
-                    // If particles are close enough, draw a line
-                    if (distance < (w / 10) * (h / 10)) {
-                        opacityValue = 1 - (distance / 15000); // Fade lines as they get further apart
-                        ctx.strokeStyle = 'rgba(0, 229, 255,' + opacityValue + ')';
-                        ctx.lineWidth = 1;
+                    // Connection threshold
+                    if (distance < (w / 12) * (h / 12)) {
+                        opacityValue = 1 - (distance / 18000); 
+                        // Sleek, highly transparent lines
+                        ctx.strokeStyle = 'rgba(0, 180, 216,' + (opacityValue * 0.3) + ')'; 
+                        ctx.lineWidth = 0.8;
                         ctx.beginPath();
                         ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
                         ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
@@ -213,7 +228,7 @@
         }
 
         // Run
-        init();
+        resizeCanvas();
         animate();
     </script>
 </body>
