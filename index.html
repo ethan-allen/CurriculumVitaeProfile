@@ -1,551 +1,220 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
-<!--
-  ============================================================
-  LINKEDIN-STYLE PROFILE PAGE — TECHNICAL EDITION
-  Author: Jaime V. Luciano
-  Style: Charcoal & Blue — Clean, engineering-focused, detail-rich
-  ============================================================
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1 | Animated Foundation</title>
+    <style>
+        /* CSS Reset & Foundation */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  HOW TO HOST ON GITHUB PAGES:
-  1. Create a GitHub repository (e.g., "portfolio" or "profile").
-  2. Upload this file as "index.html" in the repo root
-     (or in a /docs folder — configure in Settings > Pages).
-  3. Go to Settings > Pages > Source: Deploy from branch > main > / (root).
-  4. Your page will be live at https://<username>.github.io/<repo-name>/
-  5. Copy that URL and add it to your LinkedIn Featured section (see below).
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevents scrollbars during the animation phase */
+            background-color: #020813; /* Deep tech dark background */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
 
-  HOW TO ADD TO LINKEDIN FEATURED SECTION:
-  1. On your LinkedIn profile, click "Add profile section" (or the + on Featured).
-  2. Choose "Featured" > "Add a link".
-  3. Paste the GitHub Pages URL.
-  4. Edit the title and description that LinkedIn auto-generates.
-  5. Upload a custom thumbnail (recommended: 1200×628 px).
+        /* The Animation Canvas */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Sits behind the content */
+        }
 
-  RECOMMENDED IMAGE SIZES:
-  - Banner/Cover image: 1584×396 px (4:1 ratio)
-  - Profile headshot: 400×400 px (1:1 ratio, circular crop)
-  - Featured media thumbnails: 1200×628 px
+        /* Content Overlay Area (Ready for Phase 2) */
+        .content-overlay {
+            position: relative;
+            z-index: 10; /* Sits above the animation */
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            text-align: center;
+            pointer-events: none; /* Lets the mouse interact with the canvas behind it */
+        }
 
-  WHERE TO EDIT:
-  - Search for "EDIT:" comments throughout this file.
-  - Replace placeholder text, image sources, and URLs as noted.
-  ============================================================
--->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Jaime V. Luciano — Systems Architect | Multi-Cloud Infrastructure | Azure, AWS, VMware, IaC, NetDevOps | 30+ Years">
-<meta name="keywords" content="Systems Architect, Cloud Engineer, Azure, AWS, Terraform, Bicep, IaC, NetDevOps, FinOps, Jaime Luciano">
-<meta name="author" content="Jaime V. Luciano">
-<meta property="og:title" content="Jaime V. Luciano — Technical Profile">
-<meta property="og:description" content="Systems Architect. 30+ years building multi-cloud infrastructure across Azure, AWS, and VMware.">
-<meta property="og:type" content="profile">
-<!-- EDIT: Replace with your hosted image URL for social sharing -->
-<meta property="og:image" content="https://via.placeholder.com/1200x628/1e293b/3b82f6?text=Jaime+V.+Luciano+Technical">
-<title>Jaime V. Luciano — Technical Profile</title>
-<style>
-  /* ============ TECHNICAL PALETTE ============
-     Primary Charcoal: #1e293b
-     Accent Blue:      #3b82f6
-     Light Blue:       #bfdbfe
-     Bright Blue:      #60a5fa
-     Dark Text:        #0f172a
-     Muted Text:       #64748b
-     Background:       #f1f5f9
-     Card White:       #ffffff
-     Code Background:  #0f172a
-     Banner Suggested: #1e293b (replace with image)
-     ============================================ */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 20px rgba(0, 229, 255, 0.4);
+        }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
-    background: #f1f5f9;
-    color: #0f172a;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  a { color: #3b82f6; text-decoration: none; transition: color 0.2s; }
-  a:hover, a:focus { color: #2563eb; text-decoration: underline; }
-  a:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
-
-  .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
-
-  /* ---- Banner ---- */
-  .banner {
-    /* EDIT: Replace background with your banner image:
-       background: url('your-banner.jpg') center/cover no-repeat; */
-    background: #1e293b;
-    background-image:
-      radial-gradient(circle at 20% 50%, rgba(59,130,246,0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 50%, rgba(59,130,246,0.1) 0%, transparent 50%);
-    height: 200px;
-    border-radius: 0 0 8px 8px;
-    position: relative;
-    overflow: hidden;
-  }
-  /* Subtle grid pattern */
-  .banner::before {
-    content: '';
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  /* ---- Profile Header ---- */
-  .profile-header {
-    position: relative;
-    margin-top: -60px;
-    padding: 0 24px 24px;
-  }
-  .headshot {
-    /* EDIT: Replace src attribute on the <img> tag below with your photo */
-    width: 130px; height: 130px;
-    border-radius: 12px;
-    border: 4px solid #ffffff;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    object-fit: cover;
-    background: #334155;
-    position: relative;
-    z-index: 2;
-  }
-  .header-info { margin-top: 14px; }
-  .header-info h1 {
-    font-size: 1.8rem; font-weight: 700; color: #0f172a;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-  .header-info .headline {
-    font-size: 0.95rem; color: #64748b; margin-top: 4px;
-    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-  }
-  .header-info .prompt-line {
-    font-size: 0.85rem; color: #3b82f6; margin-top: 8px;
-    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-  }
-  .header-info .prompt-line .cursor {
-    display: inline-block;
-    width: 8px; height: 16px;
-    background: #3b82f6;
-    margin-left: 4px;
-    animation: blink 1s step-end infinite;
-    vertical-align: text-bottom;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  /* ---- Cards ---- */
-  .card {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 24px 28px;
-    margin: 16px 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    border: 1px solid #e2e8f0;
-  }
-  .card h2 {
-    font-size: 1.15rem; font-weight: 700; color: #0f172a;
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #3b82f6;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .card h2 .icon { font-size: 1rem; opacity: 0.7; }
-
-  /* ---- About ---- */
-  .about p { color: #334155; margin-bottom: 10px; font-size: 0.92rem; }
-  .about code {
-    background: #f1f5f9;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    color: #3b82f6;
-    border: 1px solid #e2e8f0;
-  }
-
-  /* ---- Tech Stack Section ---- */
-  .tech-stack {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-  }
-  .stack-category h3 {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #64748b;
-    margin-bottom: 8px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-  .stack-items { display: flex; flex-wrap: wrap; gap: 6px; }
-  .stack-tag {
-    background: #0f172a;
-    color: #e2e8f0;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.78rem;
-    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-    border: 1px solid #334155;
-  }
-
-  /* ---- Experience ---- */
-  .experience-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; }
-  .experience-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-  .exp-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 10px; }
-  .exp-logo {
-    width: 46px; height: 46px;
-    border-radius: 6px;
-    background: #0f172a;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; color: #3b82f6; font-size: 0.7rem;
-    flex-shrink: 0;
-    font-family: 'SF Mono', monospace;
-  }
-  .exp-title {
-    font-weight: 700; font-size: 1rem; color: #0f172a;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-  .exp-company { font-size: 0.9rem; color: #475569; }
-  .exp-dates { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; font-family: monospace; }
-  .exp-bullets { list-style: none; padding-left: 0; margin-top: 8px; }
-  .exp-bullets li {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 7px;
-    color: #334155;
-    font-size: 0.88rem;
-  }
-  .exp-bullets li::before {
-    content: '▸';
-    position: absolute; left: 0; top: 0;
-    color: #3b82f6;
-    font-weight: 700;
-  }
-
-  /* ---- Certifications ---- */
-  .cert-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 10px;
-  }
-  .cert-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 0.88rem;
-  }
-  .cert-icon {
-    width: 8px; height: 8px;
-    background: #3b82f6;
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  /* ---- Featured ---- */
-  .featured-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 14px;
-  }
-  .featured-item {
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .featured-item:hover { border-color: #3b82f6; }
-  .featured-placeholder {
-    /* EDIT: Replace with actual screenshot/diagram image */
-    height: 130px;
-    background: #0f172a;
-    display: flex; align-items: center; justify-content: center;
-    color: #64748b; font-size: 0.82rem;
-    font-family: 'SF Mono', monospace;
-  }
-  .featured-caption {
-    padding: 10px 14px;
-    font-size: 0.88rem; font-weight: 600; color: #0f172a;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-  .featured-caption small { display: block; font-weight: 400; color: #64748b; margin-top: 2px; font-size: 0.78rem; }
-
-  /* ---- Contact ---- */
-  .contact-row {
-    display: flex; flex-wrap: wrap; gap: 14px;
-    font-size: 0.9rem;
-  }
-  .contact-item { display: flex; align-items: center; gap: 8px; color: #475569; }
-  .contact-icon {
-    width: 30px; height: 30px; border-radius: 6px;
-    background: #0f172a; display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; color: #3b82f6; font-weight: 700;
-    font-family: monospace;
-  }
-
-  /* ---- Languages ---- */
-  .inline-list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
-  .inline-list li {
-    background: #f1f5f9; border: 1px solid #e2e8f0; padding: 5px 12px;
-    border-radius: 6px; font-size: 0.85rem; color: #334155;
-  }
-
-  /* ---- Footer ---- */
-  footer {
-    text-align: center;
-    padding: 28px 16px;
-    font-size: 0.78rem;
-    color: #94a3b8;
-    font-family: monospace;
-  }
-
-  /* ---- Print Styles ---- */
-  @media print {
-    body { background: #fff; font-family: 'Segoe UI', Arial, sans-serif; }
-    .banner { height: 60px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-    .card { box-shadow: none; border: 1px solid #d1d5db; break-inside: avoid; }
-    .stack-tag { background: #fff; color: #0f172a; border: 1px solid #999; }
-    .prompt-line, .cursor { display: none; }
-    a { color: #1e293b; }
-    a::after { content: " (" attr(href) ")"; font-size: 0.7rem; color: #94a3b8; }
-    footer { display: none; }
-  }
-
-  /* ---- Mobile ---- */
-  @media (max-width: 640px) {
-    .banner { height: 150px; }
-    .headshot { width: 100px; height: 100px; }
-    .header-info h1 { font-size: 1.4rem; }
-    .card { padding: 18px 16px; }
-    .exp-header { flex-direction: column; gap: 6px; }
-    .tech-stack { grid-template-columns: 1fr; }
-    .contact-row { flex-direction: column; }
-  }
-</style>
+        p {
+            font-size: 1.2rem;
+            color: #8bd2de;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- ======== BANNER ======== -->
-  <!-- EDIT: Replace with <img src="your-banner.jpg" alt="Banner" style="..."> or change background -->
-  <div class="container">
-    <div class="banner" role="img" aria-label="Profile banner — Charcoal with circuit-board grid pattern. Replace with a technical-themed banner image (1584×396 px recommended)."></div>
-  </div>
+    <canvas id="hero-canvas"></canvas>
 
-  <!-- ======== PROFILE HEADER ======== -->
-  <div class="container">
-    <header class="profile-header card" style="margin-top: -60px; padding-top: 0;">
-      <!-- EDIT: Replace src with your headshot (400×400 px, square crop) -->
-      <img
-        src="https://via.placeholder.com/400x400/334155/3b82f6?text=%3E_JVL"
-        alt="Jaime V. Luciano — Professional headshot"
-        class="headshot"
-        width="130" height="130"
-      >
-      <div class="header-info">
-        <!-- EDIT: Name and headline -->
-        <h1>Jaime V. Luciano</h1>
-        <p class="headline">Systems Architect // Multi-Cloud Infrastructure // Azure | AWS | VMware // IaC + NetDevOps</p>
-        <p class="prompt-line" aria-hidden="true">$ architect --experience 30y --clouds azure,aws --mode build<span class="cursor"></span></p>
-      </div>
-    </header>
-  </div>
+    <div class="content-overlay">
+        <h1>Foundation Ready</h1>
+        <p>The animated background is active. Standing by for content integration and layout structuring.</p>
+    </div>
 
-  <main class="container">
+    <script>
+        // --- High-Tech Particle Network Animation ---
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
 
-    <!-- ======== ABOUT ======== -->
-    <section class="card about" aria-labelledby="about-heading">
-      <h2 id="about-heading"><span class="icon">📋</span> About</h2>
-      <!-- EDIT: Tailor your summary -->
-      <p>
-        I architect and automate multi-cloud infrastructure at scale. My work spans <code>Azure</code>, <code>AWS</code>, and <code>VMware</code> — from 10 Gb Direct Connect circuits and ExpressRoute hub-and-spoke topologies to Transit Gateway orchestration and cross-cloud IAM with <code>Entra ID</code>.
-      </p>
-      <p>
-        I write infrastructure in <code>Terraform</code>, <code>Bicep</code>, and <code>CloudFormation</code>. I build FinOps dashboards, KQL analytics, and zero-trust identity models. Every deployment is versioned, idempotent, and built for operational clarity.
-      </p>
-      <p>
-        30+ years of designing, breaking, and rebuilding systems — from bare-metal to serverless. I approach cloud architecture the same way I approach an IRONMAN: with discipline, preparation, and the endurance to see it through.
-      </p>
-    </section>
+        let particlesArray = [];
+        let w, h;
 
-    <!-- ======== TECH STACK ======== -->
-    <section class="card" aria-labelledby="stack-heading">
-      <h2 id="stack-heading"><span class="icon">🔧</span> Tech Stack</h2>
-      <div class="tech-stack">
-        <div class="stack-category">
-          <h3>Cloud Platforms</h3>
-          <div class="stack-items">
-            <!-- EDIT: Add or remove tech -->
-            <span class="stack-tag">Azure</span>
-            <span class="stack-tag">AWS</span>
-            <span class="stack-tag">VMware/vSphere</span>
-          </div>
-        </div>
-        <div class="stack-category">
-          <h3>Networking</h3>
-          <div class="stack-items">
-            <span class="stack-tag">Direct Connect</span>
-            <span class="stack-tag">ExpressRoute</span>
-            <span class="stack-tag">Transit Gateway</span>
-            <span class="stack-tag">Hub-and-Spoke</span>
-            <span class="stack-tag">IPv4/IPv6 IPAM</span>
-          </div>
-        </div>
-        <div class="stack-category">
-          <h3>IaC &amp; Automation</h3>
-          <div class="stack-items">
-            <span class="stack-tag">Terraform</span>
-            <span class="stack-tag">Bicep</span>
-            <span class="stack-tag">ARM Templates</span>
-            <span class="stack-tag">CloudFormation</span>
-            <span class="stack-tag">NetDevOps</span>
-          </div>
-        </div>
-        <div class="stack-category">
-          <h3>Identity &amp; Security</h3>
-          <div class="stack-items">
-            <span class="stack-tag">Entra ID</span>
-            <span class="stack-tag">Azure RBAC</span>
-            <span class="stack-tag">AWS IAM IC</span>
-            <span class="stack-tag">MFA</span>
-            <span class="stack-tag">Zero-Trust</span>
-          </div>
-        </div>
-        <div class="stack-category">
-          <h3>Observability &amp; FinOps</h3>
-          <div class="stack-items">
-            <span class="stack-tag">Log Analytics</span>
-            <span class="stack-tag">KQL</span>
-            <span class="stack-tag">FinOps</span>
-            <span class="stack-tag">Dashboards</span>
-          </div>
-        </div>
-        <div class="stack-category">
-          <h3>Data &amp; Research</h3>
-          <div class="stack-items">
-            <span class="stack-tag">Globus</span>
-            <span class="stack-tag">Azure Blob</span>
-            <span class="stack-tag">Agile/Scrum</span>
-          </div>
-        </div>
-      </div>
-    </section>
+        // Mouse interaction coordinates
+        let mouse = {
+            x: null,
+            y: null,
+            radius: 150 // Distance the mouse interacts with particles
+        }
 
-    <!-- ======== EXPERIENCE ======== -->
-    <section class="card" aria-labelledby="experience-heading">
-      <h2 id="experience-heading"><span class="icon">💼</span> Experience</h2>
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
 
-      <article class="experience-item">
-        <div class="exp-header">
-          <!-- EDIT: Replace with company logo -->
-          <div class="exp-logo" aria-hidden="true">&gt;_</div>
-          <div>
-            <div class="exp-title">Multi-Cloud Network Solutions Architect</div>
-            <div class="exp-company">ANG Signal</div>
-            <!-- EDIT: Update dates -->
-            <div class="exp-dates">// present</div>
-          </div>
-        </div>
-        <ul class="exp-bullets" role="list">
-          <!-- EDIT: Add, remove, or reword bullets -->
-          <li>Designed and architected a 10 Gb AWS Direct Connect circuit for high-throughput hybrid connectivity between on-premises data centers and AWS workloads.</li>
-          <li>Led the AWS Cloud Assessment for WOC — Agile delivery (MVP/MVA, Day 0/1/2), proof-of-concept through pilot to production.</li>
-          <li>Championed NetDevOps and IaC adoption with CloudFormation and Terraform for repeatable, auditable deployments.</li>
-          <li>Automated Transit Gateway attachment orchestration, streamlining multi-VPC and multi-account network connectivity.</li>
-          <li>Designed Azure hub-and-spoke network architecture for ExpressRoute integration with consistent, low-latency enterprise connectivity.</li>
-          <li>Supported MOC-P research: IPAM management, Globus-to-Azure Blob Storage transfers, ERAV-to-vessel VPN over Starlink POC.</li>
-          <li>Built FinOps and cloud intelligence dashboards for cost transparency, usage accountability, and budget optimization.</li>
-          <li>Developed Azure analytics with Log Analytics workspaces and KQL — operational insights, security telemetry, performance baselines.</li>
-          <li>Architected cross-cloud IAM via Entra ID: MFA, Azure RBAC, AWS IAM Identity Center under unified governance.</li>
-          <li>Managed global IP address space (IPv4/IPv6) across Direct Connect and ExpressRoute, ensuring conflict-free addressing and routing integrity.</li>
-        </ul>
-      </article>
+        window.addEventListener('mouseout', function() {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
 
-      <!-- EDIT: Add more experience entries by copying the <article> block above -->
-    </section>
+        // Set Canvas to full screen
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-    <!-- ======== CERTIFICATIONS ======== -->
-    <section class="card" aria-labelledby="certs-heading">
-      <h2 id="certs-heading"><span class="icon">🏅</span> Certifications</h2>
-      <div class="cert-grid" role="list">
-        <!-- EDIT: Add or remove certifications -->
-        <div class="cert-item" role="listitem"><span class="cert-icon" aria-hidden="true"></span> FinOps Certified Practitioner</div>
-        <div class="cert-item" role="listitem"><span class="cert-icon" aria-hidden="true"></span> AWS Advanced Networking — Specialty</div>
-        <div class="cert-item" role="listitem"><span class="cert-icon" aria-hidden="true"></span> AWS Solutions Architect — Professional</div>
-        <div class="cert-item" role="listitem"><span class="cert-icon" aria-hidden="true"></span> AWS Solutions Architect — Associate</div>
-        <div class="cert-item" role="listitem"><span class="cert-icon" aria-hidden="true"></span> VMware Certified Professional 6</div>
-        <div class="cert-item" role="listitem"><span class="cert-icon" aria-hidden="true"></span> CompTIA Security+</div>
-        <div class="cert-item" role="listitem"><span class="cert-icon" aria-hidden="true"></span> NetApp Accredited Storage Architect</div>
-      </div>
-    </section>
+        // Particle Blueprint
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
 
-    <!-- ======== FEATURED ======== -->
-    <section class="card" aria-labelledby="featured-heading">
-      <h2 id="featured-heading"><span class="icon">📌</span> Featured</h2>
-      <div class="featured-grid">
-        <div class="featured-item">
-          <!-- EDIT: Replace placeholder with architecture diagram screenshot -->
-          <div class="featured-placeholder" role="img" aria-label="Architecture diagram placeholder — replace with a screenshot of your multi-cloud topology (1200×628 px recommended)">
-            &gt; topology.diagram --render
-          </div>
-          <div class="featured-caption">
-            Multi-Cloud Network Topology
-            <small>Hub-and-spoke + Transit Gateway across Azure &amp; AWS</small>
-          </div>
-        </div>
-        <div class="featured-item">
-          <!-- EDIT: Replace placeholder with dashboard screenshot -->
-          <div class="featured-placeholder" role="img" aria-label="Dashboard placeholder — replace with a screenshot of your FinOps dashboard (1200×628 px recommended)">
-            &gt; finops.dashboard --view
-          </div>
-          <div class="featured-caption">
-            FinOps Intelligence Dashboard
-            <small>KQL-powered cost &amp; usage analytics</small>
-          </div>
-        </div>
-      </div>
-    </section>
+            // Draw individual particle
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
 
-    <!-- ======== LANGUAGES & INTERESTS ======== -->
-    <section class="card" aria-labelledby="languages-heading">
-      <h2 id="languages-heading"><span class="icon">🌐</span> Languages &amp; Interests</h2>
-      <ul class="inline-list" role="list">
-        <li>English (Native)</li>
-        <li>Spanish (Native)</li>
-        <li>🏊 IRONMAN Finisher</li>
-      </ul>
-    </section>
+            // Calculate movement and mouse interaction
+            update() {
+                // Bounce off edges
+                if (this.x > w || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > h || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
 
-    <!-- ======== CONTACT ======== -->
-    <section class="card" aria-labelledby="contact-heading">
-      <h2 id="contact-heading"><span class="icon">📡</span> Contact</h2>
-      <div class="contact-row">
-        <div class="contact-item">
-          <div class="contact-icon" aria-hidden="true">in</div>
-          <!-- EDIT: Replace with your actual LinkedIn URL -->
-          <a href="https://www.linkedin.com/in/YOUR-PROFILE" target="_blank" rel="noopener noreferrer">linkedin.com/in/YOUR-PROFILE</a>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon" aria-hidden="true">@</div>
-          <!-- EDIT: Replace with your preferred contact email -->
-          <a href="mailto:your.email@example.com">your.email@example.com</a>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon" aria-hidden="true">📍</div>
-          <span>Northern Virginia (DMV)</span>
-        </div>
-      </div>
-    </section>
+                // Mouse repel effect
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < mouse.radius + this.size) {
+                    if (mouse.x < this.x && this.x < w - this.size * 10) {
+                        this.x += 1.5;
+                    }
+                    if (mouse.x > this.x && this.x > this.size * 10) {
+                        this.x -= 1.5;
+                    }
+                    if (mouse.y < this.y && this.y < h - this.size * 10) {
+                        this.y += 1.5;
+                    }
+                    if (mouse.y > this.y && this.y > this.size * 10) {
+                        this.y -= 1.5;
+                    }
+                }
 
-  </main>
+                // Move particle
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
 
-  <footer>
-    <p>// &copy; 2026 Jaime V. Luciano — Technical Profile // all rights reserved</p>
-  </footer>
+        // Initialize Particle Array
+        function init() {
+            particlesArray = [];
+            // Adjust the divisor (10000) to increase/decrease particle density
+            let numberOfParticles = (h * w) / 10000;
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1; // Particle size between 1 and 3
+                let x = (Math.random() * ((w - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((h - size * 2) - (size * 2)) + size * 2);
+                // Speed and direction
+                let directionX = (Math.random() * 1.5) - 0.75;
+                let directionY = (Math.random() * 1.5) - 0.75;
+                let color = '#00e5ff'; // Cyan color to match the tech theme
 
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        // Draw lines connecting particles that are close to each other
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                                 + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    
+                    // If particles are close enough, draw a line
+                    if (distance < (w / 10) * (h / 10)) {
+                        opacityValue = 1 - (distance / 15000); // Fade lines as they get further apart
+                        ctx.strokeStyle = 'rgba(0, 229, 255,' + opacityValue + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, w, h);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        // Run
+        init();
+        animate();
+    </script>
 </body>
 </html>
