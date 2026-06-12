@@ -1,0 +1,19 @@
+{
+  "site_files": [
+    ".nojekyll",
+    "README.md",
+    "assets/css/styles.css",
+    "assets/js/main.js",
+    "index.html"
+  ],
+  "clickable_anchor_links_in_index_html": [
+    "mailto:iam.administrator@webiq.cloud"
+  ],
+  "clickable_anchor_link_count": 1,
+  "contact_destination": "mailto:iam.administrator@webiq.cloud",
+  "contains_company_source_name_anywhere": false,
+  "contains_external_http_urls_anywhere": false,
+  "contains_nav_header_footer_tags_in_index_html": false,
+  "contains_img_tags_in_index_html": false,
+  "external_dependencies": "none"
+}
