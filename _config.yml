@@ -1,0 +1,67 @@
+# ============================================================
+#  Jekyll Configuration — Corporate Site
+# ============================================================
+title: "Acme Corp"
+description: "Engineering solutions for a complex world."
+baseurl: ""          # subpath, e.g. /repo-name if hosted at org.github.io/repo-name
+url: "https://your-org.github.io"
+
+# Build
+timezone: America/New_York
+markdown: kramdown
+highlighter: rouge
+permalink: /:title/
+
+# Sass
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Collections
+collections:
+  pages:
+    output: true
+    permalink: /:name/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: page
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/og-default.jpg
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - TESTING_CHECKLIST.md
+  - node_modules
+  - vendor
+  - .git
+  - .github
+
+# Plugins
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-feed
+
+# SEO / jekyll-seo-tag
+twitter:
+  card: summary_large_image
+logo: /assets/images/logo-placeholder.svg
+
+# Analytics — replace UA-XXXXXXXX-X with your GA4 Measurement ID
+google_analytics: "G-XXXXXXXXXX"
+
+# Formspree — replace with your Formspree endpoint
+formspree_endpoint: "https://formspree.io/f/YOUR_FORM_ID"
+
+# Cookie consent
+cookie_banner: true
